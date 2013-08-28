@@ -1,5 +1,14 @@
 # WordPress Module
 
+## UPDATE
+
+@rajkissu: I'm modifying this module to be usable as a custom resource type instead of a
+class. This makes it possible to deploy multiple wordpress installations on a
+single node.
+
+I'll update the Readme once this is done. Until then, feel free to check the
+source :)
+
 ## Overview
 
 This will set up an installation of Wordpress 3.5 on Debian and Redhat style distributions.

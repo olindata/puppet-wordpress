@@ -1,13 +1,13 @@
-class wordpress::app (
+define wordpress::app (
   $install_dir,
   $install_url,
   $version,
-  $db_name,
+  $db_name = $name,
   $db_host,
-  $db_user,
+  $db_user = $name,
   $db_password,
-  $wp_owner,
-  $wp_group,
+  $wp_owner = $name,
+  $wp_group = $name,
   $wp_lang,
   $wp_plugin_dir,
 ) {

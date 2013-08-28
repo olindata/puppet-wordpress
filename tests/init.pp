@@ -1,4 +1,4 @@
-class { 'wordpress':
+wordpress::setup { 'wordpress':
   install_dir => '/var/www/wordpress',
   db_name     => 'wordpress',
   db_host     => 'localhost',

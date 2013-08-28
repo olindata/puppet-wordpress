@@ -1,10 +1,10 @@
-class wordpress::db (
+define wordpress::db (
+  $db_name = $name,
+  $db_host,
+  $db_user = $name,
+  $db_password,
   $create_db,
   $create_db_user,
-  $db_name,
-  $db_host,
-  $db_user,
-  $db_password,
 ) {
   validate_bool($create_db,$create_db_user)
   validate_string($db_name,$db_host,$db_user,$db_password)
