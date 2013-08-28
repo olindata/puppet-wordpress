@@ -52,7 +52,7 @@
 # === Examples
 #
 define wordpress::setup (
-  $install_dir    = "/opt/$name",
+  $install_dir    = "/opt/${name}",
   $install_url    = 'http://wordpress.org',
   $version        = '3.5',
   $create_db      = true,
@@ -61,12 +61,12 @@ define wordpress::setup (
   $db_host        = 'localhost',
   $db_user        = $name,
   $db_password    = 'password',
-  $wp_owner       = $name,
-  $wp_group       = $name,
+  $wp_owner       = 'root',
+  $wp_group       = '0',
   $wp_lang        = '',
   $wp_plugin_dir  = 'DEFAULT'
 ) {
-  anchor { 'wordpress::begin': }
+  anchor { "wordpress::begin::${name}": }
   -> wordpress::app { $db_name:
     install_dir   => $install_dir,
     install_url   => $install_url,
@@ -88,5 +88,5 @@ define wordpress::setup (
     db_user        => $db_user,
     db_password    => $db_password,
   }
-  -> anchor { 'wordpress::end': }
+  -> anchor { "wordpress::end::${name}": }
 }

@@ -2,12 +2,12 @@ define wordpress::app (
   $install_dir,
   $install_url,
   $version,
-  $db_name = $name,
+  $db_name,
   $db_host,
-  $db_user = $name,
+  $db_user,
   $db_password,
-  $wp_owner = $name,
-  $wp_group = $name,
+  $wp_owner,
+  $wp_group,
   $wp_lang,
   $wp_plugin_dir,
 ) {
@@ -19,6 +19,7 @@ define wordpress::app (
     group  => $wp_group,
     mode   => '0644',
   }
+
   Exec {
     path      => ['/bin','/sbin','/usr/bin','/usr/sbin'],
     cwd       => $install_dir,
@@ -38,12 +39,12 @@ define wordpress::app (
   }
 
   ## Download and extract
-  exec { 'Download wordpress':
+  exec { "Download wordpress for ${name}":
     command => "wget ${install_url}/wordpress-${version}.tar.gz",
     creates => "${install_dir}/wordpress-${version}.tar.gz",
     require => File[$install_dir],
   }
-  -> exec { 'Extract wordpress':
+  -> exec { "Extract wordpress for ${name}":
     command => "tar zxvf ./wordpress-${version}.tar.gz --strip-components=1",
     creates => "${install_dir}/index.php",
   }
@@ -55,22 +56,22 @@ define wordpress::app (
     ensure  => present,
     content => template('wordpress/wp-keysalts.php.erb'),
     replace => false,
-    require => Exec['Extract wordpress'],
+    require => Exec["Extract wordpress for ${name}"],
   }
   concat { "${install_dir}/wp-config.php":
     owner   => $wp_owner,
     group   => $wp_group,
     mode    => '0755',
-    require => Exec['Extract wordpress'],
+    require => Exec["Extract wordpress for ${name}"],
   }
-  concat::fragment { 'wp-config.php keysalts':
+  concat::fragment { "wp-config.php keysalts for ${name}":
     target  => "${install_dir}/wp-config.php",
     source  => "${install_dir}/wp-keysalts.php",
     order   => '10',
     require => File["${install_dir}/wp-keysalts.php"],
   }
   # Template uses: $db_name, $db_user, $db_password, $db_host
-  concat::fragment { 'wp-config.php body':
+  concat::fragment { "wp-config.php body for ${name}":
     target  => "${install_dir}/wp-config.php",
     content => template('wordpress/wp-config.php.erb'),
     order   => '20',
